@@ -2,14 +2,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
+import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -21,7 +23,7 @@ public class FirstTest {
     public void driverSetup() {
         System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
         driver = new ChromeDriver();
-        driver.manage().window().setSize(new Dimension(1295, 730));
+        driver.manage().window().maximize();
     }
 
     @Test
@@ -45,22 +47,25 @@ public class FirstTest {
         Assertions.assertEquals(entryURL, driver.getCurrentUrl(), "URL is not correct");*/
     }
 
-    @AfterEach
+    /*@AfterEach
     public void driverQuit() {
-        driver.close();
-        driver.quit();
-    }
+        //driver.close();
+        //driver.quit();
+    }*/
 
     @Test
-    public void navigate() {
-        driver.navigate().to("https://pl.wikipedia.org/wiki/Wikipedia:Strona_g%C5%82%C3%B3wna");
-        driver.navigate().to("https://www.nasa.gov/");
-        driver.navigate().back();
-        String entryURL = "https://pl.wikipedia.org/wiki/Wikipedia:Strona_g%C5%82%C3%B3wna";
-        Assertions.assertEquals(entryURL, driver.getCurrentUrl(), "URL is not correct");
-        driver.navigate().forward();
-        String entryURL2 = "https://www.nasa.gov/";
-        Assertions.assertEquals(entryURL2, driver.getCurrentUrl(), "URL is not correct");
-
+    public void navigate() throws InterruptedException, AWTException {
+        driver.get("https://www.lambdatest.com/pricing");
+        ((JavascriptExecutor) driver).executeScript("scroll(0,300)");
+        Actions ac = new Actions(driver);
+        WebElement wb = driver.findElement(By.xpath("/html/body/div[2]/section[1]/div/div[2]/div[2]/div[1]/div/div/div[3]/p"));
+        ac.moveToElement(wb).build().perform();
+        Thread.sleep(3000);
+        WebElement plan = driver.findElement(By.xpath("/html/body/div[2]/section[1]/div/div[2]/div[2]/div[2]/div/div/div[2]/div/div/button"));
+        plan.click();
+        Thread.sleep(2000);
+        driver.findElement(By.xpath("//a[text()='4 Parallel Tests (25 Users)']")).click();
+        Thread.sleep(4000);
+        driver.quit();
     }
 }
